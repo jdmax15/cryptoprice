@@ -38,7 +38,18 @@ def get_bitcoin_data():
         except Exception as e:
             print(f"{e}: Can't find coin")
 
+def get_historical_price():
 
+    url = "https://api.coingecko.com/api/v3/coins/bitcoin/history?date=30-12-2023"
+
+    headers = {
+        "accept": "application/json",
+        "x-cg-demo-api-key": "CG-unzV2e5tfpB4bhmLgzExK7Gu"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    print(response.text)
 
 # Pings CoinGecko, will respond "To the Moon!" if successfull.
 def ping():
@@ -65,7 +76,8 @@ def main():
         print(ping())
     elif choice == 2:
         print(get_bitcoin_data())
-    
+    elif choice == 3:
+        get_historical_price()
 
 if __name__ == "__main__":
     main()
