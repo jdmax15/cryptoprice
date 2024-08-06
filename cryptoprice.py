@@ -7,23 +7,36 @@ import os
 # Requests Manual: https://requests.readthedocs.io/en/latest/
 
 def get_bitcoin_data():
+    while True:    
+        try:
+            coin = input("What coin to get? ").lower()
+            currency = "aud"
 
-    url = "https://api.coingecko.com/api/v3/simple/price"
+            url = "https://api.coingecko.com/api/v3/simple/price"
 
-    # Parameters for the request
-    params = {
-        "ids": "bitcoin",  # Add the cryptocurrency ID(s) you want to fetch
-        "vs_currencies": "usd"  # Specify the currency to get the price in
-    }
+            # Parameters for the request
+            params = {
+                "ids": f"{coin}",  # Add the cryptocurrency ID(s) you want to fetch
+                "vs_currencies": f"{currency}"  # Specify the currency to get the price in
+            }
 
-    headers = {
-        "accept": "application/json",
-        "x-cg-demo-api-key": "CG-unzV2e5tfpB4bhmLgzExK7Gu"
-    }
+            headers = {
+                "accept": "application/json",
+                "x-cg-demo-api-key": "CG-unzV2e5tfpB4bhmLgzExK7Gu"
+            }
 
-    response = requests.get(url, headers=headers, params=params)
+            response = requests.get(url, headers=headers, params=params)
 
-    print(response.text)
+            if response.status_code == 200:
+                data = response.json()
+                if coin in data and currency in data[coin]:
+                    return f"The currenct price of {coin.upper()} in {currency.upper()} is ${data[coin][currency]}."
+                else:
+                    print("Invalid coin or curerncy. Please try again.")
+            else:
+                print("Error fetching data. Please try again.")
+        except Exception as e:
+            print(f"{e}: Can't find coin")
 
 
 
@@ -46,14 +59,12 @@ def print_menu():
     
 
 def main():
-    print(ping())
-    get_bitcoin_data()
     print_menu()
-    choice = input("Choice: ")
+    choice = int(input("Choice: "))
     if choice == 1:
         print(ping())
     elif choice == 2:
-        get_bitcoin_data()
+        print(get_bitcoin_data())
     
 
 if __name__ == "__main__":
